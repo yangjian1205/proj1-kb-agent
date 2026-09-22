@@ -1,0 +1,12 @@
+# HTTP 服务
+fastapi==0.141.1
+uvicorn[standard]==0.52.1
+
+# LLM / 向量化
+openai==2.53.0
+python-dotenv==1.2.2
+
+# 检索与向量库
+chromadb==1.5.9
+numpy==2.5.3
+jieba==0.42.1
