@@ -217,7 +217,8 @@ curl -X POST http://127.0.0.1:8000/ask \
 | `latency_ms` | int | 端到端耗时（毫秒） |
 | `judge_reason` | str | 灰区判定理由，非灰区为空串 |
 
-<!-- d:\Backup\xwechat_files\wxid_ru1eb05h2wo22_491c\temp\RWTemp\2026-09\edfd1aeda2902dccd77ac0d9b0bc5f8a.png -->
+<img width="958" height="1029" alt="7c570132e34bbf292f2b57e25c351732" src="https://github.com/user-attachments/assets/25a18393-cdb8-4af3-9951-8cb6d26e919e" />
+
 
 ---
 
