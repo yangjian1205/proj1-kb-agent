@@ -1,0 +1,22 @@
+# 密钥：绝不入库
+.env
+
+# 虚拟环境
+venv/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 二进制 / 可重建的索引产物（用 python -m kb.build_index 重建）
+kb/*.npy
+chroma_db/
+
+# 评测中途缓存（可重跑生成）
+eval/_run_cache.json
+
+# 日志与运行记录
+logs/
+runs/
+
+
