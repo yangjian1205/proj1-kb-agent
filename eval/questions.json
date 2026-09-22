@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "version": "2.0",
+    "created": "2026-09-15",
+    "corpus": "docs/ 34 份文档 / kb/chunks.json 214 块",
+    "judge": "以 gold_chunks（chunk_id 列表）为唯一真相来源。块级判定：top5 中任一块的 chunk_id 命中 gold_chunks 即算命中；文档级判定由脚本从 chunks.json 反查文档名后自动派生。",
+    "why_chunk_level": "实测发现文档级判定下三路 hit@5 全是 100%（语料小 + 同一主题散落 3~4 份文档，命中太容易），指标饱和没有区分度。改成块级后才能真正区分「找到了正确文档」和「找到了正确那一段」。",
+    "types": {
+      "direct": "直接问：题面用词与文档用词基本一致",
+      "synonym": "术语鸿沟：员工口语 vs 文档书面语（如 打车费/交通费、盖章/用印）",
+      "entity": "专有名词/缩写：VPN、OA、钉钉、飞书、CRM、五险一金",
+      "numeric": "数字与条款：金额、时限、天数、系数",
+      "multi": "多来源：答案同时散落在制度/指南/FAQ 多份文档",
+      "ood": "库外题（out-of-domain）：语料 0 命中，正确行为是拒答，不计入 hit@5 / MRR"
+    }
+  },
+  "questions": [
+    {"id": 1,  "type": "direct",  "q": "报销票据有什么要求？",              "gold_chunks": [1, 180], "note": "抬头/税号；发票丢了按 80% 报"},
+    {"id": 2,  "type": "direct",  "q": "报销要在多长时间内提交？",          "gold_chunks": [4, 129, 181], "note": "30 日 / 跨月次月 10 日"},
+    {"id": 3,  "type": "direct",  "q": "上下班时间是几点？",                "gold_chunks": [9, 209, 186, 87], "note": "9:00-18:00，4 处重复"},
+    {"id": 4,  "type": "direct",  "q": "迟到会扣钱吗？扣多少？",            "gold_chunks": [11, 209, 186], "note": "30 分钟内 20 元"},
+    {"id": 5,  "type": "direct",  "q": "出差住宿费能报多少？",              "gold_chunks": [30, 182, 202], "note": "一线 500 / 其他 350"},
+    {"id": 6,  "type": "direct",  "q": "出差有伙食补助吗？",                "gold_chunks": [31, 182, 202], "note": "一线 100 / 其他 80"},
+    {"id": 7,  "type": "direct",  "q": "年假有多少天？",                    "gold_chunks": [19, 132, 186], "note": "满 1 年 5 天"},
+    {"id": 8,  "type": "direct",  "q": "婚假几天？",                        "gold_chunks": [20], "note": "3 天 + 晚婚"},
+    {"id": 9,  "type": "direct",  "q": "产假多少天？",                      "gold_chunks": [21], "note": "98 天"},
+    {"id": 10, "type": "direct",  "q": "工资每个月几号发？",                "gold_chunks": [37, 210, 187, 88], "note": "每月 10 日"},
+
+    {"id": 11, "type": "synonym", "q": "打车费能报销吗？",                  "gold_chunks": [182, 130, 76, 2, 180], "note": "★ 术语鸿沟：制度里写「交通费」，不写「打车费」"},
+    {"id": 12, "type": "synonym", "q": "加班到很晚打车回家能报吗？",        "gold_chunks": [76, 130, 156], "note": "22:00 后"},
+    {"id": 13, "type": "synonym", "q": "在职证明怎么开？",                  "gold_chunks": [188, 153], "note": "口语「开证明」vs 文档「用印申请」"},
+    {"id": 14, "type": "synonym", "q": "报销的钱什么时候能到我卡上？",      "gold_chunks": [128, 181], "note": "每周二、周四打款"},
+    {"id": 15, "type": "synonym", "q": "出差前要提前几天申请？",            "gold_chunks": [28, 135], "note": "提前申请要求"},
+    {"id": 16, "type": "synonym", "q": "电脑坏了找谁修？",                  "gold_chunks": [192, 141, 52], "note": "口语「坏了」vs「IT 服务台报修」"},
+    {"id": 17, "type": "synonym", "q": "新来的第一天要带什么材料？",        "gold_chunks": [120, 121, 185, 82], "note": "口语「新来的」vs「新员工入职」"},
+    {"id": 18, "type": "synonym", "q": "忘了打卡怎么办？",                  "gold_chunks": [10, 209], "note": "补卡"},
+    {"id": 19, "type": "synonym", "q": "我想请一天事假，怎么弄？",          "gold_chunks": [131, 24, 13], "note": "口语「怎么弄」vs 操作步骤"},
+    {"id": 20, "type": "synonym", "q": "我要离职了，需要交接什么？",        "gold_chunks": [164, 95], "note": "交接清单"},
+    {"id": 21, "type": "synonym", "q": "办公用品怎么领？",                  "gold_chunks": [61, 144], "note": "领用流程"},
+    {"id": 22, "type": "synonym", "q": "给客户送礼的钱能报吗？",            "gold_chunks": [2, 170, 182], "note": "口语「送礼」vs「业务招待费」"},
+
+    {"id": 23, "type": "entity",  "q": "公司 VPN 怎么用？",                 "gold_chunks": [194, 54], "note": "★ 缩写：BM25 主场"},
+    {"id": 24, "type": "entity",  "q": "会议室怎么预订？",                  "gold_chunks": [108, 175], "note": "飞书 → 日历 → 会议室"},
+    {"id": 25, "type": "entity",  "q": "OA 上怎么提交报销单？",             "gold_chunks": [126], "note": "OA 操作步骤"},
+    {"id": 26, "type": "entity",  "q": "钉钉打卡有什么要求？",              "gold_chunks": [10, 209], "note": "GPS 范围 300 米"},
+    {"id": 27, "type": "entity",  "q": "CRM 里客户跟进记录要怎么写？",      "gold_chunks": [114], "note": "销售易 CRM"},
+    {"id": 28, "type": "entity",  "q": "收到钓鱼邮件该怎么办？",            "gold_chunks": [204, 57], "note": "安全事件报告"},
+    {"id": 29, "type": "entity",  "q": "重要工作文件放哪里最安全？",        "gold_chunks": [206, 195, 55], "note": "公司云盘"},
+    {"id": 30, "type": "entity",  "q": "五险一金什么时候开始交？",          "gold_chunks": [212, 39], "note": "入职当月增员，15 日为界"},
+
+    {"id": 31, "type": "numeric", "q": "加班到几点可以报销餐费？",          "gold_chunks": [76, 130, 156], "note": "20:30 / 30 元"},
+    {"id": 32, "type": "numeric", "q": "出差可以借备用金吗？最多借多少？",  "gold_chunks": [183, 5], "note": "80%、上限 5000"},
+    {"id": 33, "type": "numeric", "q": "公司系统密码多久要换一次？",        "gold_chunks": [203, 53], "note": "90 天"},
+    {"id": 34, "type": "numeric", "q": "旷工半天扣多少钱？",                "gold_chunks": [12], "note": "扣发当日工资"},
+    {"id": 35, "type": "numeric", "q": "每天最多能加班几个小时？",          "gold_chunks": [74], "note": "一般 1 小时，特殊 3 小时"},
+    {"id": 36, "type": "numeric", "q": "试用期最长是多久？",                "gold_chunks": [83, 185, 158], "note": "3-6 个月"},
+    {"id": 37, "type": "numeric", "q": "绩效 S 级的绩效系数是多少？",       "gold_chunks": [48, 47], "note": "1.3"},
+    {"id": 38, "type": "numeric", "q": "市内交通费报销超过多少要审批？",    "gold_chunks": [182, 2, 180], "note": "单笔超 500 元需部门负责人审批"},
+    {"id": 39, "type": "numeric", "q": "全勤奖怎么拿？",                    "gold_chunks": [213], "note": "无迟到早退旷工请假"},
+
+    {"id": 40, "type": "multi",   "q": "加班费怎么算？",                    "gold_chunks": [75, 211], "note": "150% / 200%"},
+    {"id": 41, "type": "multi",   "q": "离职要提前多久提出？",              "gold_chunks": [94, 163, 185], "note": "正式 30 天 / 试用期 3 天"},
+    {"id": 42, "type": "multi",   "q": "请病假需要什么证明？",              "gold_chunks": [23, 132], "note": "二级以上医院证明"},
+    {"id": 43, "type": "multi",   "q": "想内部转岗怎么办？",                "gold_chunks": [189, 161], "note": "满 1 年 + 绩效 B"},
+    {"id": 44, "type": "multi",   "q": "竞业限制协议什么时候签？",          "gold_chunks": [97, 69, 167], "note": "入职签 + 离职确认"},
+    {"id": 45, "type": "multi",   "q": "一年要上多少培训学时？",            "gold_chunks": [104], "note": "普通 24 学时。注：员工手册第五章写的是「人均不少于 40 小时」，与培训制度的 24 学时冲突 —— 多来源数字不一致，是可讲的发现"},
+
+    {"id": 46, "type": "ood", "q": "公司有健身房吗？",                      "gold_chunks": [], "note": "grep 0 命中"},
+    {"id": 47, "type": "ood", "q": "公司有没有员工股权激励计划？",          "gold_chunks": [], "note": "「股权」「期权」0 命中"},
+    {"id": 48, "type": "ood", "q": "我能申请杭州市人才落户补贴吗？",        "gold_chunks": [], "note": "「落户」「人才补贴」0 命中"},
+    {"id": 49, "type": "ood", "q": "公司提供心理咨询服务吗？",              "gold_chunks": [], "note": "「心理咨询」0 命中"},
+    {"id": 50, "type": "ood", "q": "公司股票今天多少钱一股？",              "gold_chunks": [], "note": "「股票」「股价」0 命中"}
+  ]
+}
